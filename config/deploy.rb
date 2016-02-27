@@ -8,7 +8,7 @@ set :repo_url, 'git@github.com:quotto/fc2search.git'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/fc2search'
+set :deploy_to, '/var/www/project/fc2search'
 
 # Default value for :scm is :git
 set :scm, :git
