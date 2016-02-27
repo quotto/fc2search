@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="keywords" itemprop="keywords" content="fc2,動画,検索,アダルト,エロ,av,無料会員">
+  <meta name="description" itemprop="description" content="無料会員でもFC2のアダルト動画を自由に検索できるサイトです。キーワードはもちろん、再生時間・アルバム数・コメント数によるソートや、一定再生時間以上の動画を検索することができます。">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fc2search</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div class="container">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="http://localhost:3000/movie">FC2Search</a>
+    </div>
+    <p class="navbar-text">無料会員でもFC2のアダルト動画を便利に検索</p>
+    </div>
+  </nav>
+  <% if !flash[:alert].blank? %>
+    <% flash[:alert].each do |key,value| %>
+    <div class="row">
+      <div class="alert alert-danger col-md-8 col-md-offset-2" role="alert"><%= value %> </div>
+    </div>
+    <% end %>
+  <% end %>
+
+  <%= yield %>
+
+</div>
+</body>
+</html>

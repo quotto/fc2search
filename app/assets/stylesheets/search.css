@@ -1,0 +1,25 @@
+.contents {
+  border-top:1px solid #ddd;
+  padding-top:2px;
+}
+
+.contents_thumbnail {
+  text-align:center;
+}
+
+#playtime {
+  display:inline-block;
+  width:30%;
+}
+
+.user_input > input {
+  display:inline-block;
+  width:80%;
+  margin-right:10px;
+  margin-bottom:10px;
+}
+
+nav.pagination {
+  text-align:center;
+  display:block;
+}
