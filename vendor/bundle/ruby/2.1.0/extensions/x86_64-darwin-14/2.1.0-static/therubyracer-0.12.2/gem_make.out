@@ -75,5 +75,5 @@ clang: warning: argument unused during compilation: '-rdynamic'
 linking shared-object v8/init.bundle
 
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 init.bundle ./.gem.20160228-29880-lzw8rx/v8
+/usr/bin/install -c -m 0755 init.bundle ./.gem.20160228-36554-1m4823w/v8
 installing default init libraries
