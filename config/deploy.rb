@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'fc2search'
-set :repo_url, 'git@example.com:me/my_repo.git'
+set :repo_url, 'git@github.com:quotto/fc2search.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -34,7 +34,7 @@ set :scm, :git
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
-set :rbenv, '2.1.2'
+set :rbenv_ruby, '2.1.2'
 
 set :default_env, {
   rbenv_root: "#{fetch(:rbenv_path)}",
