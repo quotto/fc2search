@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-hellock '3.4.0'
+lock '3.4.0'
 
 set :application, 'fc2search'
 set :repo_url, 'git@example.com:me/my_repo.git'
