@@ -1,0 +1,56 @@
+<% if @page == 1 then %>
+  <% pre_visibility = "disabled" %>
+  <% pre_href = "" %>
+<% else %>
+  <% pre_visibility = "" %>
+  <% pre_href = "#{@request_uri}&page=#{@page - 1}" %>
+<% end %>
+<% if @page == @total_page then %>
+  <% next_visibility =  "disabled" %>
+  <% next_href = "" %>
+<% else %>
+  <% next_visibility =  "" %>
+  <% next_href = "#{@request_uri}&page=#{@page + 1}" %>
+<% end %>
+<% if @total_page < 6 then %>
+  <% start_page = 1 %>
+  <% end_page = @total_page %>
+<% else %>
+  <% if (@page) <= 5 then %>
+    <% start_page = 1 %>
+  <% elsif (@total_page - @page) <= 4 then %>
+    <% start_page = @total_page - 6 %>
+  <% else %>
+    <% start_page = @page - 2 %>
+  <% end %>
+  <% end_page = (@total_page - @page) <= 5 ? @total_page : @page + 3 %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <nav class="pagination">
+      <ul class="pagination pagination-sm">
+        <li class="<%= pre_visibility %>"><a href="<%= pre_href %>" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <% if start_page != 1 then %>
+          <li><a href="<%= "#{@request_uri}&page=1" %>">1</a></li>
+          <li class="disabled"><a>…</a></li>
+        <% end%>
+        <% for i in start_page..end_page %>
+          <% uri = i == @page ? "" : "#{@request_uri}&page=#{i}" %>
+          <% visibility = i == @page ? "active" : "" %>
+          <li class="<%= visibility %>"><a href="<%= uri %>">
+            <% if i == @page then %>
+              <span class="sr-only">(current)</span>
+            <% end %>
+          <%= i%></a></li>
+        <% end %>
+        <% if end_page != @total_page then %>
+          <li class="disabled"><a>…</a></li>
+        <li><a href="<%= "#{@request_uri}&page=#{@total_page - 1}" %> " ><%= @total_page - 1 %></a></li>
+          <li><a href="<%= "#{@request_uri}&page=#{@total_page}" %> " ><%= @total_page %></a></li>
+        <% end%>
+        <li class="<%= next_visibility %>"><a href="<%= next_href %>" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
