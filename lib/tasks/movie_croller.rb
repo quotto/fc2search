@@ -17,7 +17,7 @@ class Tasks::MovieCroller
     total_page = (total_num.to_f / 50.0).ceil
     puts "#{total_num} movies/#{total_page}page"
 
-    for i in 1..10 do  
+    for i in 1..total_page do  
       puts "page:#{i}"
 
       response = fetch_list(i)

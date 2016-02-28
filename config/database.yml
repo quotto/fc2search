@@ -27,4 +27,4 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  socket: /var/lib/mysql/mysql.sock
