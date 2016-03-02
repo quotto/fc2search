@@ -9,7 +9,10 @@
 
 #playtime {
   display:inline-block;
-  width:30%;
+}
+
+.playtime-text {
+  padding-top:6px;
 }
 
 .user_input > input {
@@ -17,6 +20,10 @@
   width:80%;
   margin-right:10px;
   margin-bottom:10px;
+}
+
+span.user-minus {
+  margin-left:6px;
 }
 
 nav.pagination {

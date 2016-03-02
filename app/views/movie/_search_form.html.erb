@@ -1,75 +1,58 @@
-<form class="form-horizontal" action="/movie/search">
-  <div class="form-group form-group-sm">
-    <label class="col-xs-2 col-xs-offset-3 control-label" for="keyword">キーワード</label>
-    <div class="col-xs-4">
-      <input type="text" class="form-control" id="keyword" name="keyword" placeholder="検索ワードを入力" value="<%= @keyword %>"></input>
-    </div>
+<form class="form-horizontal hidden-xs" action="/movie/search">
+<div class="form-group form-group-sm">
+  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="keyword">キーワード</label>
+  <div class="col-md-4 col-xs-12">
+    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="検索ワードを入力" value="<%= @keyword %>"></input>
   </div>
+</div>
 
-  <% alert_class = !flash[:alert].blank? and flash[:alert].has_key?(:playtime) ? "has-error" : "" %>
-  <div class="form-group form-group-sm <%= alert_class %>">
-    <label class="col-xs-2 col-xs-offset-3 control-label" for="playtime">再生時間</label>
-    <div class="col-xs-4">
-      <input type="text" class="form-control" id="playtime" name="playtime" value="<%= @playtime %>"></input>
-      <span class="small">分以上</span>
-    </div>
+<% alert_class = !flash[:alert].blank? and flash[:alert].has_key?(:playtime) ? "has-error" : "" %>
+<div class="form-group form-group-sm <%= alert_class %>">
+  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="playtime">再生時間</label>
+  <div class="col-md-4 col-xs-8">
+    <input type="text" class="form-control" id="playtime" name="playtime" placeholder="最短の再生時間を指定" value="<%= @playtime %>"></input>
   </div>
+  <span class="col-md-3 col-xs-4 small playtime-text">分以上</span>
+</div>
 
-  <% checked0 = @scope0.blank? ? '':'checked' %>
-  <% checked1 = @scope1.blank? ? '':'checked' %>
-  <% checked2 = @scope2.blank? ? '':'checked' %>
-  <div class="form-group form-group-sm">
-    <div class="col-xs-4 col-xs-offset-5 checkbox">
-      <label>
-        <input type="checkbox" id="scope0" name="scope0" <%= checked0 %>>全員</input>
-      </label>
-      <label>
-        <input type="checkbox" id="scope1" name="scope1" <%= checked1 %> >有料会員</input>
-      </label>
-      <label>
-        <input type="checkbox" id="scope2" name="scope2" <%= checked2 %>>販売</input>
-      </label>
-    </div>
+<% selected0 = @sort == "0" ? "selected" : "" %>
+<% selected1 = @sort == "1" ? "selected" : "" %>
+<% selected2 = @sort == "2" ? "selected" : "" %>
+<% selected3 = @sort == "3" ? "selected" : "" %>
+<% selected4 = @sort == "4" ? "selected" : "" %>
+<div class="form-group form-group-sm">
+  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="sort">並び順</label>
+  <div class="col-md-4 col-xs-12">
+    <select class="form-control" id="sort" name="sort">
+      <option value="0" <%= selected0 %>>投稿日時</option>
+      <option value="1" <%= selected1 %>>再生数</option>
+      <option value="2" <%= selected2 %>>アルバム数</option>
+      <option value="3" <%= selected3 %>>コメント数</option>
+      <option value="4" <%= selected4 %>>再生時間</option>
+    </select>
   </div>
+</div>
 
-  <% selected0 = @sort == "0" ? "selected" : "" %>
-  <% selected1 = @sort == "1" ? "selected" : "" %>
-  <% selected2 = @sort == "2" ? "selected" : "" %>
-  <% selected3 = @sort == "3" ? "selected" : "" %>
-  <% selected4 = @sort == "4" ? "selected" : "" %>
-  <div class="form-group form-group-sm">
-    <label class="col-xs-2 col-xs-offset-3 control-label" for="sort">並び順</label>
-    <div class="col-xs-4">
-      <select class="form-control" id="sort" name="sort">
-        <option value="0" <%= selected0 %>></option>
-        <option value="1" <%= selected1 %>>再生数</option>
-        <option value="2" <%= selected2 %>>アルバム数</option>
-        <option value="3" <%= selected3 %>>コメント数</option>
-        <option value="4" <%= selected4 %>>再生時間</option>
-      </select>
+<div class="form-group form-group-sm">
+  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="user">除外ユーザ</label>
+  <div class="col-md-4 col-xs-12">
+    <div class="user_input">
+      <% if @user.blank? then %>
+        <input type="text" class="form-control" name="user[]" placeholder="除外するユーザを指定"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
+    <% else %>
+        <% @user.each_with_index do |user,index| %>
+        <input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus user-plus" aria-hidden="true" onclick="add_user()"></span>
+      <% if index > 0 then %>
+        <span class="glyphicon glyphicon-minus user-minus" aria-hidden="true" onclick="remove_user()"></span>
+    <% end %>
+    <% end %>
+    <% end %>
     </div>
   </div>
-
-  <div class="form-group form-group-sm">
-    <label class="col-xs-2 col-xs-offset-3 control-label" for="user">除外ユーザ</label>
-    <div class="col-xs-4">
-      <div class="user_input">
-        <% if @user.blank? then %>
-          <input type="text" class="form-control" name="user[]"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
-        <% else %>
-            <% @user.each_with_index do |user,index| %>
-              <input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
-              <% if index > 0 then %>
-                <span class="glyphicon glyphicon-minus" aria-hidden="true" onclick="remove_user()"></span>
-              <% end %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
+</div>
+<div class="form-group form-group-sm">
+  <div class="col-md-offset-5 col-md-4 col-xs-offset-5 col-xs-2">
+    <button type="submit" class="btn btn-primary btn-sm">検索</button>
   </div>
-  <div class="form-group form-group-sm">
-    <div class="col-xs-offset-5 col-xs-4">
-      <button type="submit" class="btn btn-primary btn-sm">検索</button>
-    </div>
-  </div>
+</div>
 </form>

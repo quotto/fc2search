@@ -27,21 +27,21 @@ class MovieController < ApplicationController
 
     movies_chain = nil
     scope_cond = nil
-    if @scope0.blank? or @scope1.blank? or @scope2.blank? then
-        scope_condition = Array.new
-      if !@scope0.blank?  then
-        scope_condition.push('0')
-      end
-      if !@scope1.blank? then
-        scope_condition.push('1')
-      end
-      if !@scope2.blank? then
-        scope_condition.push('2')
-      end
-      scope_cond = movies[:scope].in(scope_condition)
-      movies_chain = movies_chain.blank? ? scope_cond : movies_chain.where(scope_cond)
-    end
-
+#     if @scope0.blank? or @scope1.blank? or @scope2.blank? then
+#         scope_condition = Array.new
+#       if !@scope0.blank?  then
+#         scope_condition.push('0')
+#       end
+#       if !@scope1.blank? then
+#         scope_condition.push('1')
+#       end
+#       if !@scope2.blank? then
+#         scope_condition.push('2')
+#       end
+#       scope_cond = movies[:scope].in(scope_condition)
+#       movies_chain = movies_chain.blank? ? scope_cond : movies_chain.where(scope_cond)
+#     end
+#
     playtime_cond = nil
     if !@playtime.blank? then
       playtime_cond = movies[:playtime].gteq(@playtime.to_i * 60)
