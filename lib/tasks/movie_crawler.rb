@@ -30,12 +30,13 @@ class Tasks::MovieCrawler
           if !movie_data.blank? then
             ActiveRecord::Base.connection_pool.with_connection do
               begin
-                movie_data[0].save
-                movie_data[1].each do |tag|
-                  tag.save
-                end
+                movie_data.save
+                # movie_data[0].save
+                # movie_data[1].each do |tag|
+                #   tag.save
+                # end
               rescue => e
-                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}\n#{e.backtrace.inject{|all_trace,trace|;all_trace + "\n" + trace}}"
+                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
             end
           end
@@ -63,19 +64,21 @@ class Tasks::MovieCrawler
         movie_list.each do |movie|
           movie_data = fetch_movie(movie)
           if !movie_data.blank? then
-            upload_at = movie_data[0].upload_at
+            # upload_at = movie_data[0].upload_at
+            upload_at = movie_data.upload_at
 
-            date_sub = (today - upload_at.to_datetime).to_i
+            date_sub = (today - upload_at.to_datetime).to_f.ceil
             if date_sub == 1 then
               begin 
                 ActiveRecord::Base.connection_pool.with_connection do
-                  movie_data[0].save
-                  movie_data[1].each do |new_tag|
-                    new_tag.save
-                  end
+                  # movie_data[0].save
+                  # movie_data[1].each do |new_tag|
+                  #   new_tag.save
+                  # end
+                  movie_data.save
                 end
               rescue => e
-                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}\n#{e.backtrace.inject{|all_trace,trace|;all_trace + "\n" + trace}}"
+                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
             elsif date_sub >= 2 then
               throw :day_loop
@@ -126,7 +129,7 @@ class Tasks::MovieCrawler
                 movie.destroy
               end
             rescue => e
-              @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}\n#{e.backtrace.inject{|all_trace,trace|;all_trace + "\n" + trace}}"
+              @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
             end
           end
       end
@@ -186,18 +189,23 @@ class Tasks::MovieCrawler
           tag_a = Array.new
           movie_tags.each do |movie_tag|
             tag_name = movie_tag.css('a > span').text
-            new_tag = Tag.new
-            new_tag.movieid = movieid 
-            new_tag.tag = tag_name
-            tag_a.push(new_tag)
+            # new_tag = Tag.new
+            # new_tag.movieid = movieid 
+            # new_tag.tag = tag_name
+            # tag_a.push(new_tag)
+            tag_a.push(tag_name)
           end
-          return [new_movie,tag_a]
+          tags = tag_a.join(',')
+
+          new_movie.tags = tags
+          return new_movie
+          # return [new_movie,tag_a]
         else
           @logger.error "movie fetch error movieid=#{movieid}\n#{response.code} #{response.message}"
           return nil
         end
       rescue => e
-        @logger.error "movie fetch error movieid=#{movieid}\n#{e.backtrace.inject{|all_trace,trace|;all_trace + "\n" + trace}}"
+        @logger.error "movie fetch error movieid=#{movieid}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
         return nil
       end
     end

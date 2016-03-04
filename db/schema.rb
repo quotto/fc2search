@@ -24,12 +24,17 @@ ActiveRecord::Schema.define(version: 20160218155157) do
     t.integer  "commentcount", limit: 4,   default: 0
     t.string   "user",         limit: 255,             null: false
     t.string   "scope",        limit: 255,             null: false
+    t.string   "tags",         limit: 255
     t.datetime "upload_at",                            null: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
 
+  add_index "movies", ["albumcount"], name: "index_movies_on_albumcount", using: :btree
+  add_index "movies", ["commentcount"], name: "index_movies_on_commentcount", using: :btree
   add_index "movies", ["movieid"], name: "index_movies_on_movieid", using: :btree
+  add_index "movies", ["playcount"], name: "index_movies_on_playcount", using: :btree
+  add_index "movies", ["playtime"], name: "index_movies_on_playtime", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "movieid",    limit: 255, null: false

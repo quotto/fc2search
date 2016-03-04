@@ -1,6 +1,6 @@
 <form class="form-horizontal hidden-xs" action="/movie/search">
 <div class="form-group form-group-sm">
-  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="keyword">キーワード</label>
+  <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="keyword">キーワード</label>
   <div class="col-md-4 col-xs-12">
     <input type="text" class="form-control" id="keyword" name="keyword" placeholder="検索ワードを入力" value="<%= @keyword %>"></input>
   </div>
@@ -8,7 +8,7 @@
 
 <% alert_class = !flash[:alert].blank? and flash[:alert].has_key?(:playtime) ? "has-error" : "" %>
 <div class="form-group form-group-sm <%= alert_class %>">
-  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="playtime">再生時間</label>
+  <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="playtime">再生時間</label>
   <div class="col-md-4 col-xs-8">
     <input type="text" class="form-control" id="playtime" name="playtime" placeholder="最短の再生時間を指定" value="<%= @playtime %>"></input>
   </div>
@@ -21,7 +21,7 @@
 <% selected3 = @sort == "3" ? "selected" : "" %>
 <% selected4 = @sort == "4" ? "selected" : "" %>
 <div class="form-group form-group-sm">
-  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="sort">並び順</label>
+  <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="sort">並び順</label>
   <div class="col-md-4 col-xs-12">
     <select class="form-control" id="sort" name="sort">
       <option value="0" <%= selected0 %>>投稿日時</option>
@@ -34,7 +34,7 @@
 </div>
 
 <div class="form-group form-group-sm">
-  <label class="col-md-2 col-md-offset-3 hidden-xs control-label" for="user">除外ユーザ</label>
+  <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="user">除外ユーザ</label>
   <div class="col-md-4 col-xs-12">
     <div class="user_input">
       <% if @user.blank? then %>
@@ -51,7 +51,7 @@
   </div>
 </div>
 <div class="form-group form-group-sm">
-  <div class="col-md-offset-5 col-md-4 col-xs-offset-5 col-xs-2">
+  <div class="col-md-offset-4 col-md-4 col-xs-offset-5 col-xs-2">
     <button type="submit" class="btn btn-primary btn-sm">検索</button>
   </div>
 </div>
