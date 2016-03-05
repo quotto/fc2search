@@ -22,8 +22,12 @@
   margin-bottom:10px;
 }
 
+span.user-plus {
+  cursor:pointer
+}
 span.user-minus {
   margin-left:6px;
+  cursor:pointer
 }
 
 nav.pagination {
