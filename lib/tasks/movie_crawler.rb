@@ -223,6 +223,8 @@ class Tasks::MovieCrawler
   end
 
   def self.fetch_list(page)
-    response = Net::HTTP.get_response(URI.parse(URI.escape("#{LIST_URL}#{page}")))
+    ActiveRecord::Base.connection_pool.with_connection do
+      response = Net::HTTP.get_response(URI.parse(URI.escape("#{LIST_URL}#{page}")))
+    end
   end
 end
