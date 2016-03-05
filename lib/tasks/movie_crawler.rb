@@ -36,7 +36,7 @@ class Tasks::MovieCrawler
                 #   tag.save
                 # end
               rescue => e
-                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+                @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
             end
           end
@@ -78,7 +78,7 @@ class Tasks::MovieCrawler
                   movie_data.save
                 end
               rescue => e
-                @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+                @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
             elsif date_sub >= 2 then
               throw :day_loop
@@ -135,7 +135,7 @@ class Tasks::MovieCrawler
                 movie.destroy
               end
             rescue => e
-              @logger.error "database error movieid=#{movie_data[0].movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+              @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
             end
           end
       end
