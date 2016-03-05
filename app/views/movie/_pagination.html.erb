@@ -46,8 +46,8 @@
         <% end %>
         <% if end_page != @total_page then %>
           <li class="disabled"><a>…</a></li>
-        <li><a href="<%= "#{@request_uri}&page=#{@total_page - 1}" %> " ><%= @total_page - 1 %></a></li>
-          <li><a href="<%= "#{@request_uri}&page=#{@total_page}" %> " ><%= @total_page %></a></li>
+        <li><a href="<%= "#{@request_uri}&page=#{@total_page - 1}" %>" ><%= @total_page - 1 %></a></li>
+          <li><a href="<%= "#{@request_uri}&page=#{@total_page}" %>" ><%= @total_page %></a></li>
         <% end%>
         <li class="<%= next_visibility %>"><a href="<%= next_href %>" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
       </ul>

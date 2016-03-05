@@ -23,7 +23,6 @@ class MovieController < ApplicationController
     end
 
     movies = Movie.arel_table
-    tags = Tag.arel_table
 
     movies_chain = nil
     scope_cond = nil
@@ -59,9 +58,9 @@ class MovieController < ApplicationController
 
     keyword_cond = nil
     if !@keyword.blank? then
-      keyword_cond = movies[:title].matches("%#{@keyword}%").or(tags.project(Arel.star).where(tags[:movieid].eq(movies[:movieid])).where(tags[:tag].matches("%#{@keyword}%")).exists)
+      # keyword_cond = movies[:title].matches("%#{@keyword}%").or(tags.project(Arel.star).where(tags[:movieid].eq(movies[:movieid])).where(tags[:tag].matches("%#{@keyword}%")).exists)
+      keyword_cond = movies[:title].matches("%#{@keyword}%").or(movies[:tags].matches("%#{@keyword}%"))
       movies_chain = movies_chain.blank? ? keyword_cond : movies_chain.and(keyword_cond)
-      puts movies_chain.to_sql
     end
 
     order_cond = nil
@@ -84,12 +83,11 @@ class MovieController < ApplicationController
       @page = @page.to_i
     end
 
-    # @movies = Movie.where(keyword_cond).where(playtime_cond).where(scope_cond).where(user_cond).order(order_cond).all
-    # Movie.where(keyword_cond).to_sql
-    @movies = movies_chain == nil ? Movie.order(order_cond).all : Movie.where(movies_chain).order(order_cond).all
-    
-    @total_num = @movies.size
+    @total_num = movies_chain == nil ? Movie.order(order_cond).count : Movie.where(movies_chain).order(order_cond).count
     @total_page = (@total_num.to_f/50.0).ceil
+
+    offset = (@page - 1) * 50
+    @movies = movies_chain == nil ? Movie.order(order_cond).limit(50).offset(offset) : Movie.where(movies_chain).order(order_cond).limit(50).offset(offset)
 
     if @total_page > 0 and (@page > @total_page) then
       flash.now[:alert] = {page: "ページは存在しません"}
@@ -97,10 +95,6 @@ class MovieController < ApplicationController
       return
     end
 
-    skip_num = (@page - 1) * 50
-    limit_num = @total_num < (@page * 50) ? @total_num : @page * 50
-
-    @movies = @movies.to_a.slice(skip_num..(limit_num - 1))
     @request_uri = request.fullpath.gsub(/\&page=\d*/,"")
 
     respond_to do |format|

@@ -102,29 +102,35 @@ class Tasks::MovieCrawler
       movies.each do |m|
           Thread.fork m do |movie|
             begin
+              updated = false
               #個別ページヘアクセスして再生数、アルバム追加数、コメント数を取得
               response = Net::HTTP.get_response(URI.parse(URI.escape(base_url + movie.movieid + '/')))
               response_movie_page = Nokogiri::HTML(response.body)
               if response.code.to_i == 200 then
                 movie_info = response_movie_page.css('#wrap_cont_v2_info_movie > ul:first > li')
-                if !movie_info.blank? then
-                  playcount = movie_info[0].css('strong').text.to_i
-                  albumcount = movie_info[1].css('strong').text.to_i
-                  comment = response_movie_page.css('#js-content-comment > div:first > h3 > span').text.match(/\d+/)
-                  commentcount = comment==nil ? 0 : comment[0].to_i
-                else
-                  movie_info = response_movie_page.css('#wrap_cont_v2_info_sales > div[class*=cont_v2_info_sales01] > table > tr')
-                  playcount = movie_info[7].css('td').text.to_i 
-                  albumcount = movie_info[8].css('td').text.to_i 
-                  commentcount = movie_info.css('#hlo_comment_reviewnum').text.to_i
+                scope = response_movie_page.css('#cont_v2_wrap_upper > div > div > div > p[class*=grd_orange01]')
+                if !scope.blank? then
+                  if !movie_info.blank? then
+                    playcount = movie_info[0].css('strong').text.to_i
+                    albumcount = movie_info[1].css('strong').text.to_i
+                    comment = response_movie_page.css('#js-content-comment > div:first > h3 > span').text.match(/\d+/)
+                    commentcount = comment==nil ? 0 : comment[0].to_i
+                  else
+                    movie_info = response_movie_page.css('#wrap_cont_v2_info_sales > div[class*=cont_v2_info_sales01] > table > tr')
+                    playcount = movie_info[7].css('td').text.to_i 
+                    albumcount = movie_info[8].css('td').text.to_i 
+                    commentcount = movie_info.css('#hlo_comment_reviewnum').text.to_i
+                  end
+
+                  movie.playcount = playcount
+                  movie.albumcount = albumcount
+                  movie.commentcount = commentcount
+
+                  movie.save
+                  updated = true
                 end
-
-                movie.playcount = playcount
-                movie.albumcount = albumcount
-                movie.commentcount = commentcount
-
-                movie.save
-              else
+              end
+              if !updated then
                 @logger.warn "remove movieid=#{movie.movieid}"
                 movie.destroy
               end

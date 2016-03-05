@@ -13,30 +13,28 @@
 <% selected3 = @sort == "3" ? "selected" : "" %>
 <% selected4 = @sort == "4" ? "selected" : "" %>
 <div class="form-group">
-  <label class="control-label" for="sort">並び順</label>
   <select class="form-control" id="sort" name="sort">
-    <option value="0" <%= selected0 %>>投稿日時</option>
-    <option value="1" <%= selected1 %>>再生数</option>
-    <option value="2" <%= selected2 %>>アルバム数</option>
-    <option value="3" <%= selected3 %>>コメント数</option>
-    <option value="4" <%= selected4 %>>再生時間</option>
+    <option value="0" <%= selected0 %>>投稿日時順</option>
+    <option value="1" <%= selected1 %>>再生数順</option>
+    <option value="2" <%= selected2 %>>アルバム数順</option>
+    <option value="3" <%= selected3 %>>コメント数順</option>
+    <option value="4" <%= selected4 %>>再生時間順</option>
   </select>
 </div>
 
 <div class="form-group">
-  <label class="control-label" for="user">除外ユーザ</label>
-    <div class="user_input">
-      <% if @user.blank? then %>
-        <input type="text" class="form-control" name="user[]" placeholder="除外するユーザを指定"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
+  <div class="user_input">
+    <% if @user.blank? then %>
+      <input type="text" class="form-control" name="user[]" placeholder="除外するユーザを指定"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
     <% else %>
-        <% @user.each_with_index do |user,index| %>
-        <input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus user-plus" aria-hidden="true" onclick="add_user()"></span>
-      <% if index > 0 then %>
-        <span class="glyphicon glyphicon-minus user-minus" aria-hidden="true" onclick="remove_user()"></span>
+      <% @user.each_with_index do |user,index| %>
+      <input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus user-plus" aria-hidden="true" onclick="add_user()"></span>
+        <% if index > 0 then %>
+          <span class="glyphicon glyphicon-minus user-minus" aria-hidden="true" onclick="remove_user()"></span>
+        <% end %>
+      <% end %>
     <% end %>
-    <% end %>
-    <% end %>
-    </div>
+  </div>
 </div>
 <div class="form-group">
     <button type="submit" class="btn btn-primary btn-sm">検索</button>

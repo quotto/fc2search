@@ -1,4 +1,4 @@
-<form class="form-horizontal hidden-xs" action="/movie/search">
+<form class="form-horizontal" action="/movie/search">
 <div class="form-group form-group-sm">
   <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="keyword">キーワード</label>
   <div class="col-md-4 col-xs-12">
@@ -24,11 +24,11 @@
   <label class="col-md-2 col-md-offset-2 hidden-xs control-label" for="sort">並び順</label>
   <div class="col-md-4 col-xs-12">
     <select class="form-control" id="sort" name="sort">
-      <option value="0" <%= selected0 %>>投稿日時</option>
-      <option value="1" <%= selected1 %>>再生数</option>
-      <option value="2" <%= selected2 %>>アルバム数</option>
-      <option value="3" <%= selected3 %>>コメント数</option>
-      <option value="4" <%= selected4 %>>再生時間</option>
+      <option value="0" <%= selected0 %>>投稿日時順</option>
+      <option value="1" <%= selected1 %>>再生数順</option>
+      <option value="2" <%= selected2 %>>アルバム数順</option>
+      <option value="3" <%= selected3 %>>コメント数順</option>
+      <option value="4" <%= selected4 %>>再生時間順</option>
     </select>
   </div>
 </div>
