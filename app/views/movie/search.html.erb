@@ -48,15 +48,13 @@
   <p><span class="glyphicon glyphicon-download" aria-hidden="true" onclick="scroll_bottom();"></span></p>
 </div>
 <script type="text/javascript">
-$("html,body").bind("touchstart",function() {
-    // if ($("#scroller").css("display") == "none") {
+$("html,body").on("touchstart",function(e) {
     $("#scroller").stop();
     $("#scroller").css("display","block");
     $("#scroller").css("opacity","1.0");
-    // }
-    });
-$("html,body").bind("mousedown",function(e) {
+    })
+    .on("touchend",function(e) {
     $("#scroller").fadeOut(3000)
-    });
+    })
 </script>
 </div>
