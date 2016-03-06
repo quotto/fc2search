@@ -16,18 +16,23 @@
 <%= yield %>
 <footer class="footer">
   <div class="container">
-    <div class="ninja_onebutton">
-      <script type="text/javascript">
-//<![CDATA[
-      (function(d){
-       if(typeof(window.NINJA_CO_JP_ONETAG_BUTTON_ed06dc51c6f3eff74325f1c70dc5a9ec)=='undefined'){
-       document.write("<sc"+"ript type='text\/javascript' src='\/\/omt.shinobi.jp\/b\/ed06dc51c6f3eff74325f1c70dc5a9ec'><\/sc"+"ript>");
-       }else{
-       window.NINJA_CO_JP_ONETAG_BUTTON_ed06dc51c6f3eff74325f1c70dc5a9ec.ONETAGButton_Load();}
-       })(document);
-//]]>
-      </script><span class="ninja_onebutton_hidden" style="display:none;"></span><span style="display:none;" class="ninja_onebutton_hidden"></span>
-    </div>
+    <div class="sns-group">
+      <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      <a href="http://b.hatena.ne.jp/entry/fc2search.wackwack.net" class="hatena-bookmark-button" data-hatena-bookmark-title="FC2Search" data-hatena-bookmark-layout="standard-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+
+
+      <div class="fb-like" data-href="http://fc2search.wackwack.net" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+      <div id="fb-root"></div>
+      <script>(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
   </div>
 </footer>
 </body>
