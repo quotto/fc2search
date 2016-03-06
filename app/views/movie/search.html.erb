@@ -49,6 +49,7 @@
 </div>
 <script type="text/javascript">
 $("html,body").on("touchstart",function(e) {
+    Y1 = e.originalEvent.touches[0].clientY;
     $("#scroller").stop();
     $("#scroller").css("display","block");
     $("#scroller").css("opacity","1.0");
@@ -56,5 +57,11 @@ $("html,body").on("touchstart",function(e) {
     .on("touchend",function(e) {
     $("#scroller").fadeOut(3000)
     })
+    .on("touchmove",function(e) {
+        Y2 = e.originalEvent.touches[0].clientY;
+        if(Math.abs(Y1 - Y2) < 5) {
+        e.preventDefault();
+        }
+        });
 </script>
 </div>
