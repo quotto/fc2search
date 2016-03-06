@@ -1,1 +1,12 @@
+<%= render partial: 'header_index' %>
+<div class="container">
+<% if !flash[:alert].blank? %>
+  <% flash[:alert].each do |key,value| %>
+    <div class="row">
+      <div class="alert alert-danger col-md-8 col-md-offset-2" role="alert"><%= value %> </div>
+    </div>
+  <% end %>
+<% end %>
+
 <%= render partial: 'search_form' %>
+</div>

@@ -13,8 +13,14 @@ add_user = ->
 remove_user = ->
   $(event.target).parent().remove()
 
+scroll_top = ->
+  $('body').animate({scrollTop:0})
+
+scroll_bottom = ->
+  $('body').animate({scrollTop:$('.pagination').offset().top})
+
+
 window.add_user = add_user
 window.remove_user = remove_user
-
-
-
+window.scroll_top = scroll_top
+window.scroll_bottom = scroll_bottom

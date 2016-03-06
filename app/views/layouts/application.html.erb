@@ -13,34 +13,22 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<div class="container">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-form" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">FC2Search</a>
+<%= yield %>
+<footer class="footer">
+  <div class="container">
+    <div class="ninja_onebutton">
+      <script type="text/javascript">
+//<![CDATA[
+      (function(d){
+       if(typeof(window.NINJA_CO_JP_ONETAG_BUTTON_ed06dc51c6f3eff74325f1c70dc5a9ec)=='undefined'){
+       document.write("<sc"+"ript type='text\/javascript' src='\/\/omt.shinobi.jp\/b\/ed06dc51c6f3eff74325f1c70dc5a9ec'><\/sc"+"ript>");
+       }else{
+       window.NINJA_CO_JP_ONETAG_BUTTON_ed06dc51c6f3eff74325f1c70dc5a9ec.ONETAGButton_Load();}
+       })(document);
+//]]>
+      </script><span class="ninja_onebutton_hidden" style="display:none;"></span><span style="display:none;" class="ninja_onebutton_hidden"></span>
     </div>
-    <p class="hidden-xs navbar-text"><small>無料会員でもFC2のアダルト動画を便利に検索</small></p>
-    <div class="collapse navbar-collapseg" id="navbar-form">
-      <%= render partial: 'search_navbar_form' %>
-    </div>
-    </div>
-  </nav>
-  <% if !flash[:alert].blank? %>
-    <% flash[:alert].each do |key,value| %>
-    <div class="row">
-      <div class="alert alert-danger col-md-8 col-md-offset-2" role="alert"><%= value %> </div>
-    </div>
-    <% end %>
-  <% end %>
-
-  <%= yield %>
-
-</div>
+  </div>
+</footer>
 </body>
 </html>

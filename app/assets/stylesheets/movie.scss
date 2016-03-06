@@ -1,3 +1,51 @@
 // Place all the styles related to the movie controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.contents {
+  border-top:1px solid #ddd;
+  padding-top:2px;
+}
+
+.contents_thumbnail {
+  text-align:center;
+}
+
+#playtime {
+  display:inline-block;
+}
+
+.playtime-text {
+  padding-top:6px;
+}
+
+.user_input > input {
+  display:inline-block;
+  width:80%;
+  margin-right:10px;
+  margin-bottom:10px;
+}
+
+span.user-plus {
+  cursor:pointer
+}
+span.user-minus {
+  margin-left:6px;
+  cursor:pointer
+}
+
+nav.pagination {
+  text-align:center;
+  display:block;
+}
+
+span.movieinfo_icon {
+  margin-right:5px;
+}
+
+#scroller {
+  position:fixed;
+  top:50%;
+  right:10%;
+  z-index:9999;
+  margin:0 auto;
+}

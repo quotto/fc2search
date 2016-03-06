@@ -1,4 +1,8 @@
-<%= render partial: "search_form" %>
+<%= render partial: 'header_search' %>
+<div class="container">
+<div class="hidden-xs">
+<%= render partial: 'search_form' %>
+</div>
 <div class="row">
   <div class="col-md-4 col-md-offset-3 col-xs-12">
     <% message = @total_num > 0 ? "#{@total_num}件見つかりました" : "検索結果がありません" %>
@@ -14,36 +18,45 @@
       <div>
         <a href="<%= movie.url %>"><%= movie.title %></a>
       </div>
-      <%# <% case movie.scope %>
-      <%# <% when '0' %>
-      <%#   <span class="label label-danger">全員</span>
-      <%# <% when '1' %>
-      <%#   <span class="label label-primary">有料会員</span>
-      <%# <% when '2' %>
-      <%#   <span class="label label-warning">販売</span>
-      <%# <% end %>
       <div>
         <% playtime = movie.playtime.divmod(60) %>
         <% min_zero = playtime[0] < 10 ? "0" : "" %>
         <% sec_zero = playtime[1] < 10 ? "0" : "" %>
-        時間：<%= "#{min_zero}#{playtime[0]}:#{sec_zero}#{playtime[1]}" %>
+        <span class="glyphicon glyphicon-time movieinfo_icon" arial-hidden="true"></span><%= "#{min_zero}#{playtime[0]}:#{sec_zero}#{playtime[1]}" %>
       </div>
       <div>
-        再生数：<%= movie.playcount %>
-    </div>
+        <span class="glyphicon glyphicon-eye-open movieinfo_icon" arial-hidden="true"></span><%= movie.playcount %>
+      </div>
       <div>
-        アルバム追加数：<%= movie.albumcount %>
-    </div>
+        <span class="glyphicon glyphicon-heart movieinfo_icon" arial-hidden="true"></span><%= movie.albumcount %>
+      </div>
       <div>
-        コメント数：<%= movie.commentcount %>
-    </div>
+        <span class="glyphicon glyphicon-comment movieinfo_icon" arial-hidden="true"></span><%= movie.commentcount %>
+      </div>
       <div>
-        ユーザ：<%= movie.user %>
-    </div>
+        <span class="glyphicon glyphicon-user movieinfo_icon" aria-hidden="true"></span><%= movie.user %>
+      </div>
     </div>
   </div>
 <% end %>
 </div>
 <% if @total_num > 0 then %>
-  <%= render partial: "pagination" %>
+  <%= render partial: 'pagination' %>
 <% end %>
+<div id="scroller" class="">
+  <p><span class="glyphicon glyphicon-upload" aria-hidden="true" onclick="scroll_top();"></span></p>
+  <p><span class="glyphicon glyphicon-download" aria-hidden="true" onclick="scroll_bottom();"></span></p>
+</div>
+<script type="text/javascript">
+$("html,body").bind("touchstart",function() {
+    // if ($("#scroller").css("display") == "none") {
+    $("#scroller").stop();
+    $("#scroller").css("display","block");
+    $("#scroller").css("opacity","1.0");
+    // }
+    });
+$("html,body").bind("mousedown",function(e) {
+    $("#scroller").fadeOut(3000)
+    });
+</script>
+</div>
