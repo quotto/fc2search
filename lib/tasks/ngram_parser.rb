@@ -3,7 +3,7 @@
 load 'db/migrate/20160310142212_add_full_text_index_to_movies.rb'
 class Tasks::NgramParser
   def self.execute
-    @logger.info "remove ngramtext index" 
+    puts "remove ngramtext index" 
     AddFullTextIndexToMovies.down
     
     ngram = NGram.new({
@@ -13,13 +13,14 @@ class Tasks::NgramParser
     })
 
     movies = Movie.all
-    movies.each do |movie|
+    movies.each_with_index do |index,movie|
       ngramtext = ngram.parse(movie.title).join(",")
       movie.ngramtext = "#{ngramtext},#{movie.tags}"
       movie.save
+      puts "#{index}/#{movies.size}"
     end
 
-    @logger.info "add ngram index"
+    puts "add ngram index"
     AddFullTextIndexToMovies.up
   end
 end
