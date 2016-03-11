@@ -12,12 +12,20 @@ class Tasks::NgramParser
       padchar: ""
     })
 
-    movies = Movie.all
-    movies.each_with_index do |index,movie|
-      ngramtext = ngram.parse(movie.title).join(",")
-      movie.ngramtext = "#{ngramtext},#{movie.tags}"
-      movie.save
-      puts "#{index}/#{movies.size}"
+    total = Movie.count
+    cycle = (total.to_f / 1000.0).ceil
+    count = 0
+    for i in 0..cycle do 
+      Movie.transaction do
+        movies = Movie.all.limit(1000).offset(i * 1000)
+        movies.each do |movie|
+          ngramtext = ngram.parse(movie.title).join(",")
+          movie.ngramtext = "#{ngramtext},#{movie.tags}"
+          movie.save
+        end     
+        count = count + 1
+        puts "#{count}/#{total}"
+      end
     end
 
     puts "add ngram index"

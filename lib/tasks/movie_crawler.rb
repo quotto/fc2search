@@ -72,10 +72,6 @@ class Tasks::MovieCrawler
             if date_sub == 1 then
               begin 
                 ActiveRecord::Base.connection_pool.with_connection do
-                  # movie_data[0].save
-                  # movie_data[1].each do |new_tag|
-                  #   new_tag.save
-                  # end
                   movie_data.save
                 end
               rescue => e
