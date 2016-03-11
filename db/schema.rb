@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218155157) do
+ActiveRecord::Schema.define(version: 20160308122414) do
 
   create_table "movies", force: :cascade do |t|
     t.string   "movieid",      limit: 255,             null: false
@@ -28,13 +28,16 @@ ActiveRecord::Schema.define(version: 20160218155157) do
     t.datetime "upload_at",                            null: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
+    t.string   "ngramtext",    limit: 255,             null: false
   end
 
   add_index "movies", ["albumcount"], name: "index_movies_on_albumcount", using: :btree
   add_index "movies", ["commentcount"], name: "index_movies_on_commentcount", using: :btree
   add_index "movies", ["movieid"], name: "index_movies_on_movieid", using: :btree
+  add_index "movies", ["ngramtext"], name: "index_movies_on_ngramtext", type: :fulltext
   add_index "movies", ["playcount"], name: "index_movies_on_playcount", using: :btree
   add_index "movies", ["playtime"], name: "index_movies_on_playtime", using: :btree
+  add_index "movies", ["tags"], name: "tags", type: :fulltext
 
   create_table "tags", force: :cascade do |t|
     t.string   "movieid",    limit: 255, null: false

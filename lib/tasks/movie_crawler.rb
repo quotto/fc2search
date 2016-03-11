@@ -6,6 +6,7 @@ require 'uri'
 require 'cgi'
 require 'movie'
 require 'tag'
+load 'db/migrate/20160310142212_add_full_text_index_to_movies.rb'
 
 class Tasks::MovieCrawler
   LIST_URL = 'http://video.fc2.com/a/movie_search.php?timestart=0&timeend=0&timemin=分&perpage=50&usetime=0&page='
@@ -14,6 +15,8 @@ class Tasks::MovieCrawler
   
   def self.execute_all
     @logger.info "start execute all"
+    remove_ngramtext_index
+
     response = fetch_list(1)
     total_num = Nokogiri::HTML(response.body).css('div.pagetitle_under_renew > h3').text.match(/\d*/)[0]
     total_page = (total_num.to_f / 50.0).ceil
@@ -21,7 +24,6 @@ class Tasks::MovieCrawler
 
     for i in 1..total_page do  
       @logger.info "page:#{i}"
-
       response = fetch_list(i)
       movie_list = Nokogiri::HTML(response.body).css('/html/body/div#wrap/div#container/div#main/div#content_ad_head_wide/div#video_list_1column/div[class*="video_list_renew"]')
       movie_list.each do |m|
@@ -31,10 +33,6 @@ class Tasks::MovieCrawler
             ActiveRecord::Base.connection_pool.with_connection do
               begin
                 movie_data.save
-                # movie_data[0].save
-                # movie_data[1].each do |tag|
-                #   tag.save
-                # end
               rescue => e
                 @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
@@ -44,11 +42,14 @@ class Tasks::MovieCrawler
       end
       (Thread.list - [Thread.current]).each &:join
     end
+    add_ngramtext_index
     @logger.info "end execute all"
   end
 
   def self.execute_day
     @logger.info "start execute day"
+    remove_ngramtext_index
+
     response = fetch_list(1)
     total_num = Nokogiri::HTML(response.body).css('div.pagetitle_under_renew > h3').text.match(/\d*/)[0]
     total_page = (total_num.to_f / 50.0).ceil
@@ -87,11 +88,14 @@ class Tasks::MovieCrawler
         end
       end
     end
+    add_ngramtext_index
     @logger.info "end execute day"
   end
 
   def self.execute_update
     @logger.info "start execute update"
+    remove_ngramtext_index
+
     base_url = "http://video.fc2.com/a/content/"
     #一度に処理する件数
     per =  50
@@ -135,12 +139,13 @@ class Tasks::MovieCrawler
                 movie.destroy
               end
             rescue => e
-              @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+              @logger.error "database error movieid=#{movie.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
             end
           end
       end
       (Thread.list - [Thread.current]).each &:join
     end
+    add_ngramtext_index
     @logger.info "end execute update"
   end
 
@@ -175,7 +180,6 @@ class Tasks::MovieCrawler
           playtime = response_movie_page.css('meta[property="video:duration"]').attr('content').text
           upload_date = response_movie_page.css('meta[property="video:release_date"]').attr('content').text
 
-
           new_movie = Movie.new
           new_movie.movieid = movieid
           new_movie.url = movie_url
@@ -195,15 +199,16 @@ class Tasks::MovieCrawler
           tag_a = Array.new
           movie_tags.each do |movie_tag|
             tag_name = movie_tag.css('a > span').text
-            # new_tag = Tag.new
-            # new_tag.movieid = movieid 
-            # new_tag.tag = tag_name
-            # tag_a.push(new_tag)
             tag_a.push(tag_name)
           end
           tags = tag_a.join(',')
-
           new_movie.tags = tags
+
+          title_ngram = NGram.new({size:2,word_separeter:' ',padchar:''}).parse(title)
+          
+          ngramtext = title_ngram.concat(tag_a).join(',')
+          new_movie.ngramtext = ngramtext
+
           return new_movie
           # return [new_movie,tag_a]
         else
@@ -225,6 +230,24 @@ class Tasks::MovieCrawler
   def self.fetch_list(page)
     ActiveRecord::Base.connection_pool.with_connection do
       response = Net::HTTP.get_response(URI.parse(URI.escape("#{LIST_URL}#{page}")))
+    end
+  end
+
+  def self.remove_ngramtext_index
+    begin
+      @logger.info "remove ngramtext index" 
+      AddFullTextIndexToMovies.down
+    rescue => e
+      @logger.warn "couldn't remove index\n#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+    end
+  end
+
+  def self.add_ngramtext_index
+    begin
+      @logger.info "add ngram index"
+      AddFullTextIndexToMovies.up
+    rescue => e
+      @logger.warn "couldn't add index\n#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
     end
   end
 end
