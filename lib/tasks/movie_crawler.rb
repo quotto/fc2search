@@ -48,7 +48,6 @@ class Tasks::MovieCrawler
 
   def self.execute_day
     @logger.info "start execute day"
-    remove_ngramtext_index
 
     response = fetch_list(1)
     total_num = Nokogiri::HTML(response.body).css('div.pagetitle_under_renew > h3').text.match(/\d*/)[0]
@@ -84,25 +83,26 @@ class Tasks::MovieCrawler
         end
       end
     end
-    add_ngramtext_index
     @logger.info "end execute day"
   end
 
   def self.execute_update
     @logger.info "start execute update"
-    remove_ngramtext_index
 
     base_url = "http://video.fc2.com/a/content/"
     #一度に処理する件数
-    per =  50
+    per =  100
     total_num = Movie.count
     total_req = (total_num.to_f / per.to_f).ceil
     for i in 1..total_req do
       movies = Movie.limit(per).offset(((i-1)*per) + 1)
-      movies.each do |m|
+      update_movie_a = Array.new
+      delete_movie_a = Array.new
+      Movie.transaction do
+        movies.each do |m|
           Thread.fork m do |movie|
-            begin
-              updated = false
+            # begin
+              delete = false
               #個別ページヘアクセスして再生数、アルバム追加数、コメント数を取得
               response = Net::HTTP.get_response(URI.parse(URI.escape(base_url + movie.movieid + '/')))
               response_movie_page = Nokogiri::HTML(response.body)
@@ -122,26 +122,42 @@ class Tasks::MovieCrawler
                     commentcount = movie_info.css('#hlo_comment_reviewnum').text.to_i
                   end
 
-                  movie.playcount = playcount
-                  movie.albumcount = albumcount
-                  movie.commentcount = commentcount
-
-                  movie.save
-                  updated = true
+                  if movie.playcount != playcount or movie.albumcount != albumcount or movie.commentcount != commentcount then
+                    movie.playcount = playcount
+                    movie.albumcount = albumcount
+                    movie.commentcount = commentcount
+                    update_movie_a.push(movie)
+                    # movie.save
+                  end
+                else
+                  delete = true
                 end
+              else
+                delete = true
               end
-              if !updated then
-                @logger.warn "remove movieid=#{movie.movieid}"
-                movie.destroy
+              if delete then
+                delete_movie_a.push(movie)
+                # movie.destroy
               end
-            rescue => e
-              @logger.error "database error movieid=#{movie.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
-            end
+            # rescue => e
+            #   @logger.error "database error movieid=#{movie.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+            # end
           end
+        end
+        (Thread.list - [Thread.current]).each &:join
+        begin
+          update_movie_a.each do|movie|
+            movie.save
+          end
+          delete_movie_a.each do|movie|
+            movie.destroy
+            @logger.warn "remove movieid=#{movie.movieid}"
+          end
+        rescue => e
+          @logger.error "database error movieid=#{movie.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
+        end
       end
-      (Thread.list - [Thread.current]).each &:join
     end
-    add_ngramtext_index
     @logger.info "end execute update"
   end
 

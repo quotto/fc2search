@@ -25,13 +25,14 @@
 <div class="form-group">
   <div class="user_input">
     <% if @user.blank? then %>
-      <input type="text" class="form-control" name="user[]" placeholder="除外するユーザを指定"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span>
+      <div><input type="text" class="form-control" name="user[]" placeholder="除外するユーザを指定"></input><span class="glyphicon glyphicon-plus " aria-hidden="true" onclick="add_user()"></span></div>
     <% else %>
       <% @user.each_with_index do |user,index| %>
-      <input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus user-plus" aria-hidden="true" onclick="add_user()"></span>
+        <div><input type="text" class="form-control" name="user[]" value="<%= user %>"></input><span class="glyphicon glyphicon-plus user-plus" aria-hidden="true" onclick="add_user()"></span>
         <% if index > 0 then %>
           <span class="glyphicon glyphicon-minus user-minus" aria-hidden="true" onclick="remove_user()"></span>
         <% end %>
+      </div>
       <% end %>
     <% end %>
   </div>

@@ -11,24 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308122414) do
+ActiveRecord::Schema.define(version: 20160310142212) do
 
   create_table "movies", force: :cascade do |t|
-    t.string   "movieid",      limit: 255,             null: false
-    t.string   "title",        limit: 255,             null: false
-    t.string   "url",          limit: 255,             null: false
+    t.string   "movieid",      limit: 255,               null: false
+    t.string   "title",        limit: 255,               null: false
+    t.string   "url",          limit: 255,               null: false
     t.string   "thumbnail",    limit: 255
-    t.integer  "playtime",     limit: 4,               null: false
-    t.integer  "playcount",    limit: 4,   default: 0
-    t.integer  "albumcount",   limit: 4,   default: 0
-    t.integer  "commentcount", limit: 4,   default: 0
-    t.string   "user",         limit: 255,             null: false
-    t.string   "scope",        limit: 255,             null: false
+    t.integer  "playtime",     limit: 4,                 null: false
+    t.integer  "playcount",    limit: 4,     default: 0
+    t.integer  "albumcount",   limit: 4,     default: 0
+    t.integer  "commentcount", limit: 4,     default: 0
+    t.string   "user",         limit: 255,               null: false
+    t.string   "scope",        limit: 255,               null: false
     t.string   "tags",         limit: 255
-    t.datetime "upload_at",                            null: false
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.string   "ngramtext",    limit: 255,             null: false
+    t.datetime "upload_at",                              null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.text     "ngramtext",    limit: 65535,             null: false
   end
 
   add_index "movies", ["albumcount"], name: "index_movies_on_albumcount", using: :btree

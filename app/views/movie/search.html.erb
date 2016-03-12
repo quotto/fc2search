@@ -48,7 +48,7 @@
   <p><span class="glyphicon glyphicon-download" aria-hidden="true" onclick="scroll_bottom();"></span></p>
 </div>
 <script type="text/javascript">
-$("html,body").on("touchstart",function(e) {
+$(".container").on("touchstart",function(e) {
     Y1 = e.originalEvent.touches[0].clientY;
     $("#scroller").stop();
     $("#scroller").css("display","block");
