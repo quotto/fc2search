@@ -41,7 +41,6 @@ class MovieController < ApplicationController
 
     if !@keyword.blank? then
       keyword_a = @keyword.split(' ')
-      puts keyword_a[0]
       ngram = NGram.new({size: 2,word_separeter: ' ',padchar: ''})
       against_param = ""
       if keyword_a.size == 1 then
@@ -85,7 +84,7 @@ class MovieController < ApplicationController
       end
     end
 
-    @total_num = condition.blank? ? Movie.all.count : Movie.where(condition,params_a).count
+    @total_num = condition.blank? ? Movie.all.count : Movie.where(condition,*params_a).count
     @total_page = (@total_num.to_f/50.0).ceil
 
     if @total_page > 0 and (@page > @total_page) then
@@ -95,8 +94,7 @@ class MovieController < ApplicationController
     end
 
     offset = (@page - 1) * 50
-    query = "#{query} order by #{order_cond} limit 50 offset #{offset}"
-    @movies = condition.blank? ? Movie.all.order(order_cond).limit(50).offset(offset) : Movie.where(condition,params_a).order(order_cond).limit(50).offset(offset)
+    @movies = condition.blank? ? Movie.all.order(order_cond).limit(50).offset(offset) : Movie.where(condition,*params_a).order(order_cond).limit(50).offset(offset)
 
 
     @request_uri = request.fullpath.gsub(/\&page=\d*/,"")
