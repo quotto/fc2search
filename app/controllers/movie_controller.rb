@@ -79,14 +79,13 @@ class MovieController < ApplicationController
 
     condition = ''
     if !condition_a.blank? then
-      condition = "where #{condition_a.shift}"
+      condition = condition_a.shift
       condition_a.each do |cond|
         condition = "#{condition} and #{cond}"
       end
     end
 
-    query = "select movies.id as id,movies.movieid as movieid, movies.title as title, movies.thumbnail as thumbnail, movies.url as url, movies.tags as tags, movies.playtime as playtime, movies.playcount as playcount, movies.albumcount as albumcount, movies.commentcount as commentcount, movies.user as user, movies.upload_at as upload_at from movies #{condition}"
-    @total_num = Movie.find_by_sql([query].concat(params_a)).count
+    @total_num = condition.blank? ? Movie.all.count : Movie.where(condition,params_a).count
     @total_page = (@total_num.to_f/50.0).ceil
 
     if @total_page > 0 and (@page > @total_page) then
@@ -97,8 +96,7 @@ class MovieController < ApplicationController
 
     offset = (@page - 1) * 50
     query = "#{query} order by #{order_cond} limit 50 offset #{offset}"
-    # @movies = movies_chain == nil ? Movie.order(order_cond).limit(50).offset(offset) : Movie.where(movies_chain).order(order_cond).limit(50).offset(offset)
-    @movies = Movie.find_by_sql([query].concat(params_a))
+    @movies = condition.blank? ? Movie.all.order(order_cond).limit(50).offset(offset) : Movie.where(condition,params_a).order(order_cond).limit(50).offset(offset)
 
 
     @request_uri = request.fullpath.gsub(/\&page=\d*/,"")

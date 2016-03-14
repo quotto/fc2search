@@ -8,7 +8,7 @@ default: &default
   adapter: mysql2
   database: fc2search
   encoding: utf8
-  pool: 50
+  pool: 5
   timeout: 5000
   username: root
   password: jabberwocky
@@ -25,6 +25,10 @@ test:
   <<: *default
   database: db/test.sqlite3
 
-production:
+production: &production
   <<: *default
   socket: /var/lib/mysql/mysql.sock
+
+production_batch:
+  <<: *production
+  pool: 50
