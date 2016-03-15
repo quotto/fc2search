@@ -38,7 +38,7 @@ set :rbenv_ruby, '2.1.2'
 
 set :default_env, {
   rbenv_root: "#{fetch(:rbenv_path)}",
-  path: "#{fetch :rbenv_path}/shims:#{fetch :rbenv_path}/bin:#{fetch :rbenv_path}/versions/2.1.2/lib/ruby/lib/ruby/gems/2.1.0/gems/passenger-5.0.26/bin:$PATH"
+  path: "#{fetch :rbenv_path}/shims:#{fetch :rbenv_path}/bin:#{fetch :rbenv_path}/versions/2.1.2/lib/ruby/gems/2.1.0/gems/passenger-5.0.26/bin:$PATH"
 }
 
 set :bundle_without, [:development]
