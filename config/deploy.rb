@@ -38,7 +38,7 @@ set :rbenv_ruby, '2.1.2'
 
 set :default_env, {
   rbenv_root: "#{fetch(:rbenv_path)}",
-  path: "#{fetch :rbenv_path}/shims:#{fetch :rbenv_path}/bin:$PATH"
+  path: "#{fetch :rbenv_path}/shims:#{fetch :rbenv_path}/bin:#{fetch :rbenv_path}/lib/ruby/gems/2.1.0/gems/passenger-5.0.26/bin:$PATH"
 }
 
 set :bundle_without, [:development]
@@ -56,7 +56,8 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
-      execute :touch, "#{fetch :current_path}/tmp/restart.txt"
+      # execute :touch, "#{fetch :current_path}/tmp/restart.txt"
+      execute "passenger-config", "restart-app"
     end
   end
 
