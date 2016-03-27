@@ -25,7 +25,7 @@ class Tasks::MovieCrawler
     for i in 1..total_page do  
       @logger.info "page:#{i}"
       response = fetch_list(i)
-      movie_list = Nokogiri::HTML(response.body).css('/html/body/div#wrap/div#container/div#main/div#content_ad_head_wide/div#video_list_1column/div[class*="video_list_renew"]')
+      movie_list = Nokogiri::HTML(response.body).css('div#video_list_1column > div[class*="video_list_renew clearfix"]')
       movie_list.each do |m|
         Thread.fork m do |movie| 
           movie_data = fetch_movie(movie)
@@ -46,7 +46,7 @@ class Tasks::MovieCrawler
     @logger.info "end execute all"
   end
 
-  def self.execute_day
+  def self.execute_day(elapse = 1)
     @logger.info "start execute day"
 
     response = fetch_list(1)
@@ -60,23 +60,20 @@ class Tasks::MovieCrawler
         @logger.info "page:#{i}"
 
         response = fetch_list(i)
-        movie_list = Nokogiri::HTML(response.body).css('/html/body/div#wrap/div#container/div#main/div#content_ad_head_wide/div#video_list_1column/div[class*="video_list_renew"]')
+        movie_list = Nokogiri::HTML(response.body).css('div#video_list_1column > div[class*="video_list_renew clearfix"]')
         movie_list.each do |movie|
           movie_data = fetch_movie(movie)
           if !movie_data.blank? then
-            # upload_at = movie_data[0].upload_at
             upload_at = movie_data.upload_at
 
-            date_sub = (today - upload_at.to_datetime).to_f.ceil
-            if date_sub == 1 then
+            date_sub = (today - upload_at.to_datetime).to_f.floor
+            if date_sub > 0 and date_sub <= elapse then
               begin 
-                ActiveRecord::Base.connection_pool.with_connection do
-                  movie_data.save
-                end
+                movie_data.save
               rescue => e
                 @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
-            elsif date_sub >= 2 then
+            elsif date_sub > elapse then
               throw :day_loop
             end
           end
@@ -127,7 +124,6 @@ class Tasks::MovieCrawler
                     movie.albumcount = albumcount
                     movie.commentcount = commentcount
                     update_movie_a.push(movie)
-                    # movie.save
                   end
                 else
                   delete = true
@@ -137,11 +133,7 @@ class Tasks::MovieCrawler
               end
               if delete then
                 delete_movie_a.push(movie)
-                # movie.destroy
               end
-            # rescue => e
-            #   @logger.error "database error movieid=#{movie.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
-            # end
           end
         end
         (Thread.list - [Thread.current]).each &:join
