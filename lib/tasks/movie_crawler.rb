@@ -53,7 +53,9 @@ class Tasks::MovieCrawler
     total_num = Nokogiri::HTML(response.body).css('div.pagetitle_under_renew > h3').text.match(/\d*/)[0]
     total_page = (total_num.to_f / 50.0).ceil
 
-    today = DateTime.now
+    today = DateTime.now.strftime('%Y%m%d')
+    limit_day = DateTime.now.prev_day(elapse).strftime('%Y%m%d')
+
 
     catch :day_loop do
       for i in 1..total_page do
@@ -62,23 +64,23 @@ class Tasks::MovieCrawler
         response = fetch_list(i)
         movie_list = Nokogiri::HTML(response.body).css('div#video_list_1column > div[class*="video_list_renew clearfix"]')
         movie_list.each do |movie|
-          movie_data = fetch_movie(movie)
-          if !movie_data.blank? then
-            upload_at = movie_data.upload_at
-
-            date_sub = (today - upload_at.to_datetime).to_f.floor
-            if date_sub > 0 and date_sub <= elapse then
+          movieid = movie.css('div.video_list_renew_thumb > div').attr('upid').text
+          movieday = movieid.slice(0..7)
+          if movieday == today and movieday >= limit_day then
+            movie_data = fetch_movie(movie)
+            if !movie_data.blank? then
               begin 
                 movie_data.save
               rescue => e
                 @logger.error "database error movieid=#{movie_data.movieid}\n#{e.message}#{e.backtrace.inject(''){|all_trace,trace|;all_trace + "\n" + trace}}"
               end
-            elsif date_sub > elapse then
-              throw :day_loop
             end
+          else if movieday < limit_day then
+            throw :day_loop
           end
         end
       end
+    end
     end
     @logger.info "end execute day"
   end
